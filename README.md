@@ -6,14 +6,14 @@ The project consists of three pages. From the first one we can enter records tha
 
 It can be started on port 3000 with the command:
 
-### npm start
+> npm start
 
 The tests are developed with RTL and Cypress. To run the unit tests we launch the command: 
 
-### npm run test
+> npm run test
 
 For the end to end tests we run the command:
 
-### npm run cy:open
+> npm run cy:open
 
 This opens the Cypress interface and allows us to run the test.
