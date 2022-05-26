@@ -17,12 +17,23 @@ const useSaveAddress = () => {
     }, [])
 
     const onSave = (valuesForm: ISaveAddress) => {
+        let namesDuplicated: string[] = []
         const nameSplited = splitValuesForm(valuesForm.name)
         const telephoneSplited = splitValuesForm(valuesForm.telephone)
-        const pairNameTelephone: ISaveAddress[] = nameSplited.map((nam, index) => ({ name: nam, telephone: telephoneSplited[index] }))
-        const newAddressList = [...state, ...pairNameTelephone]
+        let pairNameTelephone: ISaveAddress[] = nameSplited.map((nam, index) => {
+            if (state.find(e => e.name.toLowerCase() === nam.toLowerCase())) {
+                namesDuplicated.push(nam)
+                return { name: "duplicate", telephone: "" }
+            } else {
+                return { name: nam, telephone: telephoneSplited[index] }
+            }
+        })
+        pairNameTelephone = pairNameTelephone.filter(e => e.name !== "duplicate")
+        let newAddressList = [...state, ...pairNameTelephone]
         if (newAddressList.length > 300) {
             setMessage({ status: "error", title: "Limit of 300 records exceeded" })
+        } else if (namesDuplicated.length) {
+            setMessage({ status: "error", title: `Name already exist ${namesDuplicated}`})
         } else {
             setMessage({ status: "success", title: "Data stored" })
         }
@@ -32,6 +43,7 @@ const useSaveAddress = () => {
             window.localStorage.setItem(constants.addressList, JSON.stringify(limitQuantity))
         }
     }
+
 
     return [onSave] as const
 }
